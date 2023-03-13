@@ -44,6 +44,18 @@ class User extends Model
     public const GENDERS = [self::GENDER_UNKNOWN, self::GENDER_MAN, self::GENDER_WOMAN];
 
     /**
+     * 用户列表
+     *
+     * @param array $queryData
+     * @return \Hyperf\Contract\LengthAwarePaginatorInterface
+     */
+    public function usersList(array $queryData): \Hyperf\Contract\LengthAwarePaginatorInterface
+    {
+        return self::orderBy('id')
+            ->paginate((int)@$queryData['per_page'] ?: 10, ['*'], 'users', (int)@$queryData['page'] ?: 1);
+    }
+
+    /**
      * 新增用户
      *
      * @param array $queryData
@@ -52,5 +64,27 @@ class User extends Model
     public function saveUser(array $queryData): User|\Hyperf\Database\Model\Model
     {
         return self::create($queryData);
+    }
+
+    /**
+     * 用户详情
+     *
+     * @param int $id
+     * @return \Hyperf\Database\Model\Model|\Hyperf\Database\Model\Builder|null
+     */
+    public function getUser(int $id): \Hyperf\Database\Model\Model|\Hyperf\Database\Model\Builder|null
+    {
+        return self::where('id', $id)->first();
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param int $id
+     * @return void
+     */
+    public function deleteUser(int $id): void
+    {
+        self::destroy($id);
     }
 }

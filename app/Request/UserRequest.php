@@ -24,11 +24,14 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => 'required|integer|min:1',
             'name' => 'required',
             'email' => 'required|email',
             'gender' => [Rule::in(User::GENDERS)],
             'birthday' => 'date',
-            'department_id' => 'required|integer|min:1'
+            'department_id' => 'required|integer|min:1',
+            'users.*.uid' => 'required|integer|min:1',
+            'users.*.name' => 'required'
         ];
     }
 
@@ -37,8 +40,10 @@ class UserRequest extends FormRequest
      */
     protected array $scenes = [
         // 新增
-        'create' => ['name', 'email', 'gender', 'birthday', 'department_id'],
+        'create' => ['name', 'email', 'gender', 'birthday', 'department_id', 'users.*.uid', 'users.*.name'],
         // 更新
         'update' => [],
+        // 删除
+        'delete' => ['id'],
     ];
 }

@@ -173,6 +173,7 @@ return [
         'index_title' => '标题',
 
         'name' => '用户名',
+        'users.*.uid' => '用户id'
     ],
     'phone_number' => ':attribute 必须为一个有效的电话号码',
     'telephone_number' => ':attribute 必须为一个有效的手机号码',

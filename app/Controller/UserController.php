@@ -8,6 +8,8 @@ use App\Middleware\RequestLogMiddleware;
 use App\Model\User;
 use App\Request\UserRequest;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -18,9 +20,22 @@ use Hyperf\Validation\Annotation\Scene;
 #[Middlewares([RequestLogMiddleware::class])]
 class UserController extends AbstractController
 {
-    public function index(RequestInterface $request, ResponseInterface $response)
+    /**
+     * 用户列表
+     *
+     * @param RequestInterface $request
+     * @param User $user
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    #[GetMapping]
+    public function index(RequestInterface $request, User $user)
     {
-        return $response->raw('Hello Hyperf!');
+        // 获取请求数据
+        $requestData = $request->all();
+        // 数据列表
+        $user = $user->usersList($requestData)->toArray();
+
+        return $this->response->success($user);
     }
 
     /**
@@ -40,5 +55,42 @@ class UserController extends AbstractController
         $user = $user->saveUser($requestData)->toArray();
 
         return $this->response->success($user);
+    }
+
+    /**
+     * 用户详情
+     *
+     * @param RequestInterface $request
+     * @param User $user
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    #[GetMapping]
+    public function read(RequestInterface $request, User $user): \Psr\Http\Message\ResponseInterface
+    {
+        // 获取请求数据
+        $requestData = $request->all();
+        // 查询数据
+        $user = $user->getUser((int)$requestData['id'])->toArray();
+
+        return $this->response->success($user);
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param UserRequest $request
+     * @param User $user
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    #[DeleteMapping]
+    #[Scene(scene: 'delete')]
+    public function delete(UserRequest $request, User $user): \Psr\Http\Message\ResponseInterface
+    {
+        // 获取请求数据
+        $requestData = $request->all();
+        // 删除数据
+        $user->deleteUser((int)$requestData['id']);
+
+        return $this->response->success([]);
     }
 }
