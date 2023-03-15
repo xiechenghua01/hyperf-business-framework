@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Hyperf\Database\Model\SoftDeletes;
+use Hyperf\ModelCache\Cacheable;
+
 /**
  * @property int $id 
  * @property string $name 用户名
@@ -19,6 +21,7 @@ use Hyperf\Database\Model\SoftDeletes;
 class User extends Model
 {
     use SoftDeletes;
+    use Cacheable;
     /**
      * The table associated with the model.
      */
@@ -74,7 +77,17 @@ class User extends Model
      */
     public function getUser(int $id): \Hyperf\Database\Model\Model|\Hyperf\Database\Model\Builder|null
     {
-        return self::where('id', $id)->first();
+        return self::findFromCache($id);
+        // return self::where('id', $id)->first();
+    }
+
+
+    public function updateUser(array $queryData)
+    {
+        // 加载当前用户
+        $user = self::findOrFail($queryData['id']);
+        $user->fill($queryData)->save();
+        return $user;
     }
 
     /**

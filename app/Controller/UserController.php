@@ -76,6 +76,24 @@ class UserController extends AbstractController
     }
 
     /**
+     * 更新用户
+     *
+     * @param RequestInterface $request
+     * @param User $user
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    #[PostMapping]
+    public function update(RequestInterface $request, User $user): \Psr\Http\Message\ResponseInterface
+    {
+        // 获取请求数据
+        $requestData = $request->all();
+        // 查询数据
+        $user = $user->updateUser($requestData)->toArray();
+
+        return $this->response->success($user);
+    }
+
+    /**
      * 删除用户
      *
      * @param UserRequest $request
