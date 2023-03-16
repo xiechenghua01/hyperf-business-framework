@@ -76,6 +76,24 @@ class UserController extends AbstractController
     }
 
     /**
+     * 用户详情(缓存)
+     *
+     * @param RequestInterface $request
+     * @param User $user
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    #[GetMapping(path: 'getUserById')]
+    public function getUserById(RequestInterface $request, User $user): \Psr\Http\Message\ResponseInterface
+    {
+        // 获取请求数据
+        $requestData = $request->all();
+        // 查询数据
+        $user = $user->getUserById((int)$requestData['id']);
+
+        return $this->response->success($user);
+    }
+
+    /**
      * 更新用户
      *
      * @param RequestInterface $request

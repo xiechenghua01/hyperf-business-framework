@@ -81,6 +81,17 @@ class User extends Model
         // return self::where('id', $id)->first();
     }
 
+    /**
+     * 用户详情(缓存)
+     *
+     * @param int $id
+     * @return array
+     */
+    #[\Hyperf\Cache\Annotation\Cacheable(prefix: 'users', ttl: 600, listener: 'user-update')]
+    public function getUserById(int $id)
+    {
+        return self::where('id', $id)->firstOrFail()->toArray();
+    }
 
     public function updateUser(array $queryData)
     {
