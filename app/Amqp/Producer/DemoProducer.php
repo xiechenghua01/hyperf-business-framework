@@ -8,7 +8,7 @@ use App\Model\User;
 use Hyperf\Amqp\Annotation\Producer;
 use Hyperf\Amqp\Message\ProducerMessage;
 
-#[Producer(exchange: 'hyperf', routingKey: 'hyperf')]
+#[Producer(exchange: 'ehang-hyperf', routingKey: 'ehang')]
 class DemoProducer extends ProducerMessage
 {
     public function __construct($id)

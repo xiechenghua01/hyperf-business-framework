@@ -48,6 +48,7 @@ class DemoCommand extends HyperfCommand
                 $message = new DemoProducer($item['id']);
                 // 投递消息
                 $result = $this->producer->produce($message);
+                // var_dump($result);
             }
         });
 
